@@ -23,6 +23,7 @@ namespace LinkDev.Talabat.APIs
 			var app = webApplicationBuilder.Build();
 
 			#region Configure Kestrel Middlewares
+
 			// Configure the HTTP request pipeline.
 
 			if (app.Environment.IsDevelopment())
