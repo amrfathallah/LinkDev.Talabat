@@ -27,7 +27,7 @@ namespace LinkDev.Talabat.APIs
 
 			#endregion
 
-			#region Update Database
+			#region Update Database and Data Seeding
 
 			var app = webApplicationBuilder.Build();
 
@@ -44,11 +44,14 @@ namespace LinkDev.Talabat.APIs
 
 				if (pendingMigrations.Any())
 					await dbContext.Database.MigrateAsync(); // Update-Database
+
+				await StoreContextSeed.SeedAsync(dbContext);
+
 			}
 			catch (Exception ex)
 			{
 				var logger = loggerFactory.CreateLogger<Program>();
-				logger.LogError(ex, "an error has been occured during applying the migrations.");
+				logger.LogError(ex, "an error has been occured during applying the migrations or the Data Seeding.");
 			} 
 
 			#endregion
