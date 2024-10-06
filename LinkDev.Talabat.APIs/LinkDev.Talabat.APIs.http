@@ -1,0 +1,5 @@
+@HostAddress = https://localhost:7101
+
+GET {{HostAddress}}/api/weatherforecast
+
+###
