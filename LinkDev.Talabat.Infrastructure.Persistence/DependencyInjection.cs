@@ -16,6 +16,10 @@ namespace LinkDev.Talabat.Infrastructure.Persistence
 				optionsBuilder.UseSqlServer(configuration.GetConnectionString("StoreContext"));
 			});
 
+
+			services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork.UnitOfWork));
+
+
 			//services.AddScoped<IStoreContextInitializer, StoreContextInitializer>();
 			services.AddScoped(typeof(IStoreContextInitializer), typeof(StoreContextInitializer));
 
