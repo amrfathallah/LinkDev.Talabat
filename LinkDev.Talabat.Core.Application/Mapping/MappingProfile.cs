@@ -13,8 +13,13 @@ namespace LinkDev.Talabat.Core.Application.Mapping
 	{
         public MappingProfile()
         {
-            CreateMap<ProductBrand, BrandDto>();
+            CreateMap<Product, ProductToReturnDto>()
+                .ForMember(d => d.Brand, O => O.MapFrom(s => s.Brand!.Name))
+                .ForMember(d => d.Category, O => O.MapFrom(s => s.Category!.Name));
+				
+
+			CreateMap<ProductBrand, BrandDto>();
             CreateMap<ProductCategory, CategoryDto>();
-		}
+		}  
     }
 }
