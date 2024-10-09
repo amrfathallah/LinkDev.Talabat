@@ -29,6 +29,13 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 
 		}
 
+		public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity, TKey> spec, bool withTracking = false)
+		{
+			return await ApplySpecifications(spec).ToListAsync();
+			// query = _dbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).ToListAsync();
+
+		}
+
 		/// {
 		/// 	if (withTracking) return await DbContext.Set<TEntity>().ToListAsync();
 		/// 
@@ -43,15 +50,6 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 
 			return await DbContext.Set<TEntity>().FindAsync(id);
 		}
-
-		public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity, TKey> spec, bool withTracking = false)
-		{
-			return await ApplySpecifications(spec).ToListAsync();
-			// query = _dbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).ToListAsync();
-
-		}
-
-
 
 		public async Task<TEntity?> GetWithSpecAsync(ISpecifications<TEntity, TKey> spec)
 		{

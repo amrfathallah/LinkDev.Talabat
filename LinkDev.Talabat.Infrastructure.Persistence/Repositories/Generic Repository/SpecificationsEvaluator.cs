@@ -16,10 +16,10 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 		{
 			var query = inputQuery; // _dbContext.Set<Product>()
 
-			if(spec.Criteria is not null) // P => P.Id == 1
+			if(spec.Criteria is not null) // P => P.Id.Equals(1)
 				query = query.Where(spec.Criteria);
 
-			// query = _dbContext.Set<Product>().Where(P => P.Id == 1);
+			// query = _dbContext.Set<Product>().Where(P => P.Id.Equals(1));
 			// include expressions
 			// 1. P => P.Brand
 			// 2. P => P.Category
@@ -27,8 +27,8 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 
 			query = spec.Includes.Aggregate(query, (currentQuery, include) => currentQuery.Include(include));
 
-			// query = _dbContext.Set<Product>().Where(P => P.Id == 1).Include(P => P.Brand);
-			// query = _dbContext.Set<Product>().Where(P => P.Id == 1).Include(P => P.Brand).Include(P => P.Category);
+			// query = _dbContext.Set<Product>().Where(P => P.Id.Equals(1)).Include(P => P.Brand);
+			// query = _dbContext.Set<Product>().Where(P => P.Id.Equals(1)).Include(P => P.Brand).Include(P => P.Category);
 
 
 
