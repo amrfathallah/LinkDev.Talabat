@@ -13,6 +13,7 @@ namespace LinkDev.Talabat.APIs.Controllers.Controllers.Products
 		public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetProducts()
 		{
 			var products = await serviceManager.ProductService.GetProductsAsync();
+			
 			return Ok(products);
 		}
 
