@@ -33,6 +33,7 @@ namespace LinkDev.Talabat.APIs.Controllers.Controllers.Products
 		public async Task<ActionResult<IEnumerable<BrandDto>>> GetBrands()
 		{
 			var brands = await serviceManager.ProductService.GetBrandsAsync();
+			
 			return Ok(brands);
 		}
 
@@ -40,6 +41,7 @@ namespace LinkDev.Talabat.APIs.Controllers.Controllers.Products
 		public async Task<ActionResult<IEnumerable<BrandDto>>> GetCategories()
 		{
 			var categories = await serviceManager.ProductService.GetCategoriesAsync();
+			
 			return Ok(categories);
 		}
 	}
