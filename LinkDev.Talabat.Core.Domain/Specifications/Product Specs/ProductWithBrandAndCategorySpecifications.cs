@@ -26,6 +26,7 @@ namespace LinkDev.Talabat.Core.Domain.Specifications.Product_Specs
 			AddIncludes();
 		}
 
+
 		private void AddIncludes()
 		{
 			Includes.Add(P => P.Brand!);
