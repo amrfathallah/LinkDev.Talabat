@@ -19,6 +19,7 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 		{
 			if (typeof(TEntity) == typeof(Product))
 			{
+
 				return (IEnumerable<TEntity>) (withTracking? await DbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).ToListAsync() :
 									  await DbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).AsNoTracking().ToListAsync());
 
