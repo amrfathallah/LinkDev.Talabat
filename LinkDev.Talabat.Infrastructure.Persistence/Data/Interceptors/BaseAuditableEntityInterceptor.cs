@@ -41,10 +41,10 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Data.Interceptors
 				{
 					if (entry.State == EntityState.Added)
 					{
-						entry.Entity.CreatedBy = "";
+						entry.Entity.CreatedBy = _loggedInUserService.UserId!;
 						entry.Entity.CreatedOn = utcNow;
 					}
-					entry.Entity.LastModifiedBy = "";
+					entry.Entity.LastModifiedBy = _loggedInUserService.UserId!;
 					entry.Entity.LastModifiedOn = utcNow;
 				}
 			}

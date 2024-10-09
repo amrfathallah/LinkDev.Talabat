@@ -28,6 +28,7 @@ namespace LinkDev.Talabat.APIs
 			webApplicationBuilder.Services.AddSwaggerGen();
 
 			//webApplicationBuilder.Services.AddScoped(typeof(IHttpContextAccessor), typeof(HttpContextAccessor));
+			webApplicationBuilder.Services.AddHttpContextAccessor();
 			webApplicationBuilder.Services.AddScoped(typeof(ILoggedInUserService), typeof(LoggedInUserService));
 
 
