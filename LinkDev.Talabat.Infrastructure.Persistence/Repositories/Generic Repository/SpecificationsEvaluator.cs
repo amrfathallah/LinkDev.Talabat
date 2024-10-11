@@ -29,6 +29,8 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 
 			// query = _dbContext.Set<Product>().Where(P => P.BrandId == 1 && P.CategoryId == 1).OrderBy(P => P.Price);
 
+			if(spec.IsPaginationEnabled)
+				query = query.Skip(spec.Skip).Take(spec.Take);
 
 			// include expressions
 			// 1. P => P.Brand

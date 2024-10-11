@@ -10,7 +10,7 @@ namespace LinkDev.Talabat.Core.Domain.Specifications.Product_Specs
 	public class ProductWithBrandAndCategorySpecifications : BaseSpecifications<Product, int>
 	{
 		// This Object is Created via this Constructor, will be Used for Building the Query that Get All Products
-		public ProductWithBrandAndCategorySpecifications(string? sort, int? brandId, int? categoryId)
+		public ProductWithBrandAndCategorySpecifications(string? sort, int? brandId, int? categoryId, int pageSize, int pageIndex)
 			: base(
 
 				  P =>
@@ -41,6 +41,11 @@ namespace LinkDev.Talabat.Core.Domain.Specifications.Product_Specs
 					break;
 			}
 
+			// totalProducts = 18 ~ 20
+			// pageSize      = 5
+			// pageindex     = 3
+
+			ApplyPagination(pageSize * (pageIndex - 1), pageSize);
 		}
 
 
