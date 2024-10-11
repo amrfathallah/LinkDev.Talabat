@@ -17,13 +17,15 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 	{
 		public async Task<IEnumerable<TEntity>> GetAllAsync(bool withTracking = false)
 		{
-			if (typeof(TEntity) == typeof(Product))
-			{
+			//if (typeof(TEntity) == typeof(Product))
+			//{
 
-				return (IEnumerable<TEntity>) (withTracking? await DbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).ToListAsync() :
-									  await DbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).AsNoTracking().ToListAsync());
+			//	return (IEnumerable<TEntity>) (withTracking? await DbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).ToListAsync() :
+			//						  await DbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).AsNoTracking().ToListAsync());
 
-			}
+			//}
+
+
 			return withTracking ? await DbContext.Set<TEntity>().ToListAsync() :
 									  await DbContext.Set<TEntity>().AsNoTracking().ToListAsync();
 
