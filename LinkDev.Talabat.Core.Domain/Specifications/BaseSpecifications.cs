@@ -22,7 +22,7 @@ namespace LinkDev.Talabat.Core.Domain.Specifications
 
 		protected BaseSpecifications(Expression<Func<TEntity, bool>> criteriaExpression)
         {
-			Criteria = criteriaExpression; // P => P.BrandId == 1 && P.CategoryId == 1
+			Criteria = criteriaExpression; // P => P.BrandId == 2 && true
 		}
 
 		protected BaseSpecifications(TKey id)
