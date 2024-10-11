@@ -34,6 +34,9 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 		public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity, TKey> spec, bool withTracking = false)
 		{
 			return await ApplySpecifications(spec).ToListAsync();
+
+			//_dbContext.Set<Product>().Where( P => P.BrandId == 1 && P.CategoryId == 1).OrderBy(P => P.Name).Include(P => P.Brand).Include(P => P.Category).ToListAsync();
+
 			// query = _dbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).ToListAsync();
 
 		}
