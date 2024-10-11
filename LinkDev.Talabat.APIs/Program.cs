@@ -1,5 +1,8 @@
 
 using LinkDev.Talabat.APIs.Extensions;
+using LinkDev.Talabat.APIs.Services;
+using LinkDev.Talabat.Core.Application.Abstraction;
+using LinkDev.Talabat.Core.Application;
 using LinkDev.Talabat.Core.Domain.Contracts;
 using LinkDev.Talabat.Infrastructure.Persistence;
 using LinkDev.Talabat.Infrastructure.Persistence.Data;
@@ -18,14 +21,21 @@ namespace LinkDev.Talabat.APIs
 
 			// Add services to the container.
 
-			webApplicationBuilder.Services.AddControllers(); // Regester Required Services by ASP.NET Core Web APIs to DI Container.
+			webApplicationBuilder.Services.AddControllers().AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly); // Regester Required Services by ASP.NET Core Web APIs to DI Container.
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			webApplicationBuilder.Services.AddEndpointsApiExplorer();
 			webApplicationBuilder.Services.AddSwaggerGen();
 
+			//webApplicationBuilder.Services.AddScoped(typeof(IHttpContextAccessor), typeof(HttpContextAccessor));
+			webApplicationBuilder.Services.AddHttpContextAccessor();
+			webApplicationBuilder.Services.AddScoped(typeof(ILoggedInUserService), typeof(LoggedInUserService));
+
+
 
 			webApplicationBuilder.Services.AddPersistenceServices(webApplicationBuilder.Configuration);
+
+			webApplicationBuilder.Services.AddApplicationServices();
 
 			#endregion
 
@@ -48,7 +58,8 @@ namespace LinkDev.Talabat.APIs
 			}
 
 			app.UseHttpsRedirection();
-			
+
+			app.UseStaticFiles();
 
 			app.MapControllers(); 
 

@@ -15,21 +15,6 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Data.Config.Base
 		{
 			builder.Property(E => E.Id)
 				.ValueGeneratedOnAdd();
-
-			builder.Property(E => E.CreatedBy)
-				.IsRequired();
-
-			builder.Property(E => E.CreatedOn)
-				.IsRequired()
-				/*.HasDefaultValueSql("GETUTCDate()")*/;
-
-			builder.Property(E => E.LastModifiedBy)
-				.IsRequired();
-
-			builder.Property(E => E.LastModifiedOn)
-				.IsRequired()
-				/*.HasDefaultValueSql("GETUTCDate()")*/;
 		}
 	}
-
 }
