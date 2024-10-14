@@ -17,13 +17,15 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 	{
 		public async Task<IEnumerable<TEntity>> GetAllAsync(bool withTracking = false)
 		{
-			if (typeof(TEntity) == typeof(Product))
-			{
+			//if (typeof(TEntity) == typeof(Product))
+			//{
 
-				return (IEnumerable<TEntity>) (withTracking? await DbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).ToListAsync() :
-									  await DbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).AsNoTracking().ToListAsync());
+			//	return (IEnumerable<TEntity>) (withTracking? await DbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).ToListAsync() :
+			//						  await DbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).AsNoTracking().ToListAsync());
 
-			}
+			//}
+
+
 			return withTracking ? await DbContext.Set<TEntity>().ToListAsync() :
 									  await DbContext.Set<TEntity>().AsNoTracking().ToListAsync();
 
@@ -32,6 +34,9 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 		public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity, TKey> spec, bool withTracking = false)
 		{
 			return await ApplySpecifications(spec).ToListAsync();
+
+			//_dbContext.Set<Product>().Where( P => P.BrandId == 1 && P.CategoryId == 1).OrderBy(P => P.Name).Include(P => P.Brand).Include(P => P.Category).ToListAsync();
+
 			// query = _dbContext.Set<Product>().Include(P => P.Brand).Include(P => P.Category).ToListAsync();
 
 		}
@@ -41,6 +46,7 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 		/// 
 		/// 	return await DbContext.Set<TEntity>().AsNoTracking().ToListAsync();
 		/// }
+
 
 		public async Task<TEntity?> GetAsync(TKey id)
 		{
@@ -58,6 +64,12 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 
 		}
 
+
+		public async Task<int> GetCountAsync(ISpecifications<TEntity, TKey> spec)
+		{
+			return await ApplySpecifications(spec).CountAsync();
+		}
+
 		public async Task AddAsync(TEntity entity) => await DbContext.Set<TEntity>().AddAsync(entity);
 
 		public void Delete(TEntity entity) => DbContext.Set<TEntity>().Remove(entity);
@@ -67,7 +79,9 @@ namespace LinkDev.Talabat.Infrastructure.Persistence.Repositories.Generic_Reposi
 		private IQueryable<TEntity> ApplySpecifications(ISpecifications<TEntity, TKey> spec)
 		{
 			return SpecificationsEvaluator<TEntity, TKey>.GetQuery(DbContext.Set<TEntity>(), spec);
-		} 
+		}
+
+		
 		#endregion
 
 	}
