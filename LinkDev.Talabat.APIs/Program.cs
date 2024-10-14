@@ -7,6 +7,8 @@ using LinkDev.Talabat.Core.Domain.Contracts;
 using LinkDev.Talabat.Infrastructure.Persistence;
 using LinkDev.Talabat.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using LinkDev.Talabat.APIs.Controllers.Errors;
 
 namespace LinkDev.Talabat.APIs
 {
@@ -21,7 +23,38 @@ namespace LinkDev.Talabat.APIs
 
 			// Add services to the container.
 
-			webApplicationBuilder.Services.AddControllers().AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly); // Regester Required Services by ASP.NET Core Web APIs to DI Container.
+			webApplicationBuilder.Services
+				.AddControllers()
+				.ConfigureApiBehaviorOptions(options =>
+				{
+					options.SuppressModelStateInvalidFilter = false;
+					options.InvalidModelStateResponseFactory = (actionContext) =>
+					{
+						var errors = actionContext.ModelState.Where(P => P.Value!.Errors.Count > 0)
+									   .SelectMany(P => P.Value!.Errors)
+									   .Select(E => E.ErrorMessage);
+						return new BadRequestObjectResult(new ApiValidationErrorResponse()
+						{
+							Errors = errors
+						});
+					};
+				})
+				.AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly); // Regester Required Services by ASP.NET Core Web APIs to DI Container.
+
+			webApplicationBuilder.Services.Configure<ApiBehaviorOptions>(options =>
+			{
+				options.SuppressModelStateInvalidFilter = false;
+				options.InvalidModelStateResponseFactory = (actionContext) =>
+				{
+					var errors = actionContext.ModelState.Where(P => P.Value!.Errors.Count > 0)
+								   .SelectMany(P => P.Value!.Errors)
+								   .Select(E => E.ErrorMessage);
+					return new BadRequestObjectResult(new ApiValidationErrorResponse()
+					{
+						Errors = errors
+					});
+				};
+			});
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			webApplicationBuilder.Services.AddEndpointsApiExplorer();
