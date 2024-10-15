@@ -1,15 +1,13 @@
 
-using LinkDev.Talabat.APIs.Extensions;
-using LinkDev.Talabat.APIs.Services;
-using LinkDev.Talabat.Core.Application.Abstraction;
-using LinkDev.Talabat.Core.Application;
-using LinkDev.Talabat.Core.Domain.Contracts;
-using LinkDev.Talabat.Infrastructure.Persistence;
-using LinkDev.Talabat.Infrastructure.Persistence.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using LinkDev.Talabat.APIs.Controllers.Errors;
+using LinkDev.Talabat.APIs.Extensions;
 using LinkDev.Talabat.APIs.Middlewares;
+using LinkDev.Talabat.APIs.Services;
+using LinkDev.Talabat.Core.Application;
+using LinkDev.Talabat.Core.Application.Abstraction;
+using LinkDev.Talabat.Infrastructure;
+using LinkDev.Talabat.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LinkDev.Talabat.APIs
 {
@@ -42,20 +40,20 @@ namespace LinkDev.Talabat.APIs
 				})
 				.AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly); // Regester Required Services by ASP.NET Core Web APIs to DI Container.
 
-			webApplicationBuilder.Services.Configure<ApiBehaviorOptions>(options =>
-			{
-				options.SuppressModelStateInvalidFilter = false;
-				options.InvalidModelStateResponseFactory = (actionContext) =>
-				{
-					var errors = actionContext.ModelState.Where(P => P.Value!.Errors.Count > 0)
-								   .SelectMany(P => P.Value!.Errors)
-								   .Select(E => E.ErrorMessage);
-					return new BadRequestObjectResult(new ApiValidationErrorResponse()
-					{
-						Errors = errors
-					});
-				};
-			});
+			///webApplicationBuilder.Services.Configure<ApiBehaviorOptions>(options =>
+			///{
+			///	options.SuppressModelStateInvalidFilter = false;
+			///	options.InvalidModelStateResponseFactory = (actionContext) =>
+			///	{
+			///		var errors = actionContext.ModelState.Where(P => P.Value!.Errors.Count > 0)
+			///					   .SelectMany(P => P.Value!.Errors)
+			///					   .Select(E => E.ErrorMessage);
+			///		return new BadRequestObjectResult(new ApiValidationErrorResponse()
+			///		{
+			///			Errors = errors
+			///		});
+			///	};
+			///});
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			webApplicationBuilder.Services.AddEndpointsApiExplorer();
@@ -70,6 +68,8 @@ namespace LinkDev.Talabat.APIs
 			webApplicationBuilder.Services.AddPersistenceServices(webApplicationBuilder.Configuration);
 
 			webApplicationBuilder.Services.AddApplicationServices();
+
+			webApplicationBuilder.Services.AddInfrastructureServices(webApplicationBuilder.Configuration);
 
 			#endregion
 
