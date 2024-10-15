@@ -9,6 +9,7 @@ using LinkDev.Talabat.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using LinkDev.Talabat.APIs.Controllers.Errors;
+using LinkDev.Talabat.APIs.Middlewares;
 
 namespace LinkDev.Talabat.APIs
 {
@@ -84,10 +85,14 @@ namespace LinkDev.Talabat.APIs
 
 			// Configure the HTTP request pipeline.
 
+			app.UseMiddleware<CustomExceptionHandlerMiddleware>();
+
 			if (app.Environment.IsDevelopment())
 			{
 				app.UseSwagger();
 				app.UseSwaggerUI();
+				
+				//app.UseDeveloperExceptionPage();
 			}
 
 			app.UseHttpsRedirection();
