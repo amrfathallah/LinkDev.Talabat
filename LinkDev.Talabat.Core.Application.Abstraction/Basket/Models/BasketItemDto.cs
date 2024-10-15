@@ -12,7 +12,7 @@ namespace LinkDev.Talabat.Core.Application.Abstraction.Basket.Models
 		[Required]
 		public int Id { get; set; }
 		
-		[Required]
+		[Required(ErrorMessage = "Product Name is required!")]
 		public required string ProductName { get; set; }
 		public string? PictureUrl { get; set; }
 
