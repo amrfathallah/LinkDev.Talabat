@@ -30,8 +30,11 @@ namespace LinkDev.Talabat.APIs
 					options.InvalidModelStateResponseFactory = (actionContext) =>
 					{
 						var errors = actionContext.ModelState.Where(P => P.Value!.Errors.Count > 0)
-									   .SelectMany(P => P.Value!.Errors)
-									   .Select(E => E.ErrorMessage);
+									   .Select(P => new ApiValidationErrorResponse.ValidationError()
+									   {
+										   Field = P.Key,
+										   Errors = P.Value!.Errors.Select(E => E.ErrorMessage)
+									   });
 						return new BadRequestObjectResult(new ApiValidationErrorResponse()
 						{
 							Errors = errors
@@ -40,20 +43,7 @@ namespace LinkDev.Talabat.APIs
 				})
 				.AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly); // Regester Required Services by ASP.NET Core Web APIs to DI Container.
 
-			///webApplicationBuilder.Services.Configure<ApiBehaviorOptions>(options =>
-			///{
-			///	options.SuppressModelStateInvalidFilter = false;
-			///	options.InvalidModelStateResponseFactory = (actionContext) =>
-			///	{
-			///		var errors = actionContext.ModelState.Where(P => P.Value!.Errors.Count > 0)
-			///					   .SelectMany(P => P.Value!.Errors)
-			///					   .Select(E => E.ErrorMessage);
-			///		return new BadRequestObjectResult(new ApiValidationErrorResponse()
-			///		{
-			///			Errors = errors
-			///		});
-			///	};
-			///});
+		
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			webApplicationBuilder.Services.AddEndpointsApiExplorer();
@@ -85,7 +75,7 @@ namespace LinkDev.Talabat.APIs
 
 			// Configure the HTTP request pipeline.
 
-			app.UseMiddleware<CustomExceptionHandlerMiddleware>();
+			app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 			if (app.Environment.IsDevelopment())
 			{

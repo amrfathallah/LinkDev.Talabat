@@ -1,13 +1,7 @@
 ﻿using LinkDev.Talabat.APIs.Controllers.Controllers.Base;
 using LinkDev.Talabat.APIs.Controllers.Errors;
-using LinkDev.Talabat.APIs.Controllers.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinkDev.Talabat.APIs.Controllers.Controllers.Buggy
 {
@@ -15,7 +9,7 @@ namespace LinkDev.Talabat.APIs.Controllers.Controllers.Buggy
 	{
 
 		[HttpGet("notfound")] // GET: /api/buggy/notfound
-		public IActionResult GetNotFoundRequest()
+		public IActionResult GetNotFoundError()
 		{
 			//throw new NotFoundException();
 			return NotFound(new ApiResponse(404)); // 404

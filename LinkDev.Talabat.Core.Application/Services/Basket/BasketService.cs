@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
-using LinkDev.Talabat.APIs.Controllers.Exceptions;
 using LinkDev.Talabat.Core.Application.Abstraction.Basket;
 using LinkDev.Talabat.Core.Application.Abstraction.Basket.Models;
+using LinkDev.Talabat.Core.Application.Exceptions;
 using LinkDev.Talabat.Core.Domain.Contracts.Infrastructure;
 using LinkDev.Talabat.Core.Domain.Entities.Basket;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinkDev.Talabat.Core.Application.Services.Basket
 {
@@ -32,7 +27,7 @@ namespace LinkDev.Talabat.Core.Application.Services.Basket
 
 			var updatedBasket = await basketRepository.UpdateAsync(basket, timeToLive);
 
-			if (updatedBasket is null) throw new Exception(); //throw new BadRequestException("can't update, there is a problem with this basket.");
+			if (updatedBasket is null) throw new BadRequestException("can't update, there is a problem with this basket.");
 
 			return basketDto;
 
@@ -42,7 +37,7 @@ namespace LinkDev.Talabat.Core.Application.Services.Basket
 		{
 			var deleted = await basketRepository.DeleteAsync(basketId);
 
-			if(!deleted) throw new Exception(); //throw new BadRequestException("unable to delete this basket."); 
+			if(!deleted) throw new BadRequestException("unable to delete this basket."); 
 		}
 
 		
