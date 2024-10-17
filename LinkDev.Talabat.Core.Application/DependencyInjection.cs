@@ -1,8 +1,13 @@
-﻿using LinkDev.Talabat.Core.Application.Abstraction;
+﻿using AutoMapper;
+using LinkDev.Talabat.Core.Application.Abstraction;
+using LinkDev.Talabat.Core.Application.Abstraction.Basket;
 using LinkDev.Talabat.Core.Application.Abstraction.Products;
 using LinkDev.Talabat.Core.Application.Mapping;
 using LinkDev.Talabat.Core.Application.Services;
+using LinkDev.Talabat.Core.Application.Services.Basket;
 using LinkDev.Talabat.Core.Application.Services.Products;
+using LinkDev.Talabat.Core.Domain.Contracts.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -20,6 +25,18 @@ namespace LinkDev.Talabat.Core.Application
 			services.AddAutoMapper(typeof(MappingProfile));
 
 			services.AddScoped(typeof(IServiceManager), typeof(ServiceManager));
+
+			//services.AddScoped(typeof(Func<IBasketService>), typeof(BasketService));
+			//services.AddScoped(typeof(Func<IBasketService>), typeof(Func<IBasketService>));
+
+			services.AddScoped(typeof(Func<IBasketService>), (serviceProvider) =>
+			{
+				var mapper = serviceProvider.GetRequiredService<IMapper>();
+				var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+				var basketRepository = serviceProvider.GetRequiredService<IBasketRepository>();
+
+				return () => new BasketService(basketRepository, mapper, configuration);
+			});
 
 			return services;
 

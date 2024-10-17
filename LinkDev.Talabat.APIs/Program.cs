@@ -1,12 +1,13 @@
 
+using LinkDev.Talabat.APIs.Controllers.Errors;
 using LinkDev.Talabat.APIs.Extensions;
+using LinkDev.Talabat.APIs.Middlewares;
 using LinkDev.Talabat.APIs.Services;
-using LinkDev.Talabat.Core.Application.Abstraction;
 using LinkDev.Talabat.Core.Application;
-using LinkDev.Talabat.Core.Domain.Contracts;
+using LinkDev.Talabat.Core.Application.Abstraction;
+using LinkDev.Talabat.Infrastructure;
 using LinkDev.Talabat.Infrastructure.Persistence;
-using LinkDev.Talabat.Infrastructure.Persistence.Data;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LinkDev.Talabat.APIs
 {
@@ -21,7 +22,28 @@ namespace LinkDev.Talabat.APIs
 
 			// Add services to the container.
 
-			webApplicationBuilder.Services.AddControllers().AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly); // Regester Required Services by ASP.NET Core Web APIs to DI Container.
+			webApplicationBuilder.Services
+				.AddControllers()
+				.ConfigureApiBehaviorOptions(options =>
+				{
+					options.SuppressModelStateInvalidFilter = false;
+					options.InvalidModelStateResponseFactory = (actionContext) =>
+					{
+						var errors = actionContext.ModelState.Where(P => P.Value!.Errors.Count > 0)
+									   .Select(P => new ApiValidationErrorResponse.ValidationError()
+									   {
+										   Field = P.Key,
+										   Errors = P.Value!.Errors.Select(E => E.ErrorMessage)
+									   });
+						return new BadRequestObjectResult(new ApiValidationErrorResponse()
+						{
+							Errors = errors
+						});
+					};
+				})
+				.AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly); // Regester Required Services by ASP.NET Core Web APIs to DI Container.
+
+		
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			webApplicationBuilder.Services.AddEndpointsApiExplorer();
@@ -37,6 +59,8 @@ namespace LinkDev.Talabat.APIs
 
 			webApplicationBuilder.Services.AddApplicationServices();
 
+			webApplicationBuilder.Services.AddInfrastructureServices(webApplicationBuilder.Configuration);
+
 			#endregion
 
 			var app = webApplicationBuilder.Build();
@@ -51,13 +75,23 @@ namespace LinkDev.Talabat.APIs
 
 			// Configure the HTTP request pipeline.
 
+			app.UseMiddleware<ExceptionHandlerMiddleware>();
+
 			if (app.Environment.IsDevelopment())
 			{
 				app.UseSwagger();
 				app.UseSwaggerUI();
+				
+				//app.UseDeveloperExceptionPage();
 			}
 
 			app.UseHttpsRedirection();
+
+
+			app.UseStatusCodePagesWithReExecute("/Errors/{0}");
+
+			app.UseAuthentication();
+			app.UseAuthorization();
 
 			app.UseStaticFiles();
 
