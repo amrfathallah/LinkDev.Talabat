@@ -90,6 +90,16 @@ namespace LinkDev.Talabat.APIs.Middlewares
 
 					break;
 
+				case UnAuthorizedException:
+					httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+					httpContext.Response.ContentType = "application/json";
+
+					response = new ApiResponse(401, ex.Message);
+
+					await httpContext.Response.WriteAsync(response.ToString());
+
+					break;
+
 				default:
 
 					response = _env.IsDevelopment() ?
