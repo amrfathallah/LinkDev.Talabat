@@ -1,4 +1,5 @@
 ﻿using LinkDev.Talabat.Core.Domain.Contracts.Persistence;
+using LinkDev.Talabat.Core.Domain.Contracts.Persistence.DbInitializers;
 using LinkDev.Talabat.Infrastructure.Persistence._Identity;
 using LinkDev.Talabat.Infrastructure.Persistence.Data;
 using LinkDev.Talabat.Infrastructure.Persistence.Data.Interceptors;
@@ -25,7 +26,7 @@ namespace LinkDev.Talabat.Infrastructure.Persistence
 
 
 			//services.AddScoped<IStoreContextInitializer, StoreContextInitializer>();
-			services.AddScoped(typeof(IStoreContextInitializer), typeof(StoreDbContextInitializer));
+			services.AddScoped(typeof(IStoreDbInitializer), typeof(StoreDbInitializer));
 
 			services.AddScoped(typeof(ISaveChangesInterceptor), typeof(BaseAuditableEntityInterceptor));
 
@@ -43,8 +44,13 @@ namespace LinkDev.Talabat.Infrastructure.Persistence
 
 			#endregion
 
+			services.AddScoped(typeof(IStoreIdentityDbInitializer), typeof(StoreIdentityDbInitializer));
+
+
 			services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork.UnitOfWork));
+
 			
+
 			return services;
 		}
 	}

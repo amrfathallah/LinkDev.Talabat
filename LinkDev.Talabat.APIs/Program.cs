@@ -5,8 +5,12 @@ using LinkDev.Talabat.APIs.Middlewares;
 using LinkDev.Talabat.APIs.Services;
 using LinkDev.Talabat.Core.Application;
 using LinkDev.Talabat.Core.Application.Abstraction;
+using LinkDev.Talabat.Core.Domain.Entities.Identity;
 using LinkDev.Talabat.Infrastructure;
 using LinkDev.Talabat.Infrastructure.Persistence;
+using LinkDev.Talabat.Infrastructure.Persistence._Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LinkDev.Talabat.APIs
@@ -55,11 +59,36 @@ namespace LinkDev.Talabat.APIs
 
 
 
-			webApplicationBuilder.Services.AddPersistenceServices(webApplicationBuilder.Configuration);
-
 			webApplicationBuilder.Services.AddApplicationServices();
-
+			webApplicationBuilder.Services.AddPersistenceServices(webApplicationBuilder.Configuration);
 			webApplicationBuilder.Services.AddInfrastructureServices(webApplicationBuilder.Configuration);
+
+			webApplicationBuilder.Services.AddIdentity<ApplicationUser, IdentityRole>((identityOptions) =>
+			{
+				identityOptions.SignIn.RequireConfirmedAccount = true;
+				identityOptions.SignIn.RequireConfirmedEmail = true;
+				identityOptions.SignIn.RequireConfirmedPhoneNumber = true;
+
+				identityOptions.Password.RequireNonAlphanumeric = true; // $#@%
+				identityOptions.Password.RequiredUniqueChars = 2;
+				identityOptions.Password.RequiredLength = 6;
+				identityOptions.Password.RequireDigit = true;
+				identityOptions.Password.RequireLowercase = true;
+				identityOptions.Password.RequireUppercase = true;
+
+				identityOptions.User.RequireUniqueEmail = true;
+				//identityOptions.User.AllowedUserNameCharacters = "abcdenkotlg93124568_-+@#$";
+
+				identityOptions.Lockout.AllowedForNewUsers = true;
+				identityOptions.Lockout.MaxFailedAccessAttempts = 5;
+				identityOptions.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromHours(12);
+
+				//identityOptions.Stores
+				//identityOptions.Tokens
+				//identityOptions.ClaimsIdentity
+
+			})
+				.AddEntityFrameworkStores<StoreIdentityDbContext>();
 
 			#endregion
 
@@ -67,7 +96,7 @@ namespace LinkDev.Talabat.APIs
 
 			#region Update Databases Initialization
 
-			await app.InitializeStoreContextAsync();
+			await app.InitializeDbAsync();
 
 			#endregion
 
