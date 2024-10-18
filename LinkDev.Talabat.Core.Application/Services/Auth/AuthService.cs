@@ -3,17 +3,27 @@ using LinkDev.Talabat.Core.Application.Abstraction.Auth.Models;
 using LinkDev.Talabat.Core.Application.Exceptions;
 using LinkDev.Talabat.Core.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace LinkDev.Talabat.Core.Application.Services.Auth
 {
-	internal class AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) : IAuthService
+	internal class AuthService(
+		IOptions<JwtSettings> jwtSettings,
+		UserManager<ApplicationUser> userManager,
+		SignInManager<ApplicationUser> signInManager) : IAuthService
 	{
-		public async Task<UserDto> LoginAsync(LoginDto model)
+
+		private readonly JwtSettings _jwtSettings = jwtSettings.Value;
+        public async Task<UserDto> LoginAsync(LoginDto model)
 		{
 			var user = await userManager.FindByEmailAsync(model.Email);
 
@@ -28,7 +38,7 @@ namespace LinkDev.Talabat.Core.Application.Services.Auth
 				Id = user.Id,
 				DisplayName = user.DisplayName,
 				Email = user.Email!,
-				Token = "This will be JWT Token"
+				Token = await GenerateTokenAsync(user)
 
 			};
 
@@ -55,12 +65,43 @@ namespace LinkDev.Talabat.Core.Application.Services.Auth
 				Id = user.Id,
 				DisplayName = user.DisplayName,
 				Email = user.Email!,
-				Token = "This will be JWT Token"
+				Token = await GenerateTokenAsync(user)
 
 			};
 
 			return response;
 
+		}
+
+		private async Task<string> GenerateTokenAsync(ApplicationUser user)
+		{
+			// Private claims
+			var PrivateClaims = new List<Claim>()
+			{
+				new Claim(ClaimTypes.PrimarySid, user.Id),
+				new Claim(ClaimTypes.Email, user.Email!),
+				new Claim(ClaimTypes.GivenName, user.DisplayName),
+			}
+			.Union(await userManager.GetClaimsAsync(user)).ToList();
+
+			var roles = await userManager.GetRolesAsync(user);
+
+			foreach (var role  in roles)
+				PrivateClaims.Add(new Claim(ClaimTypes.Role, role.ToString()));
+
+			var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
+
+			var tokenObj = new JwtSecurityToken(
+
+				audience: _jwtSettings.Audience,
+				issuer:_jwtSettings.Issuer,
+				expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+				claims: PrivateClaims,
+				signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256)
+
+				);
+
+			return new JwtSecurityTokenHandler().WriteToken(tokenObj);
 		}
 	}
 }
