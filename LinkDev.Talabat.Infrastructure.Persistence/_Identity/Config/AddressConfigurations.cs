@@ -12,6 +12,8 @@ namespace LinkDev.Talabat.Infrastructure.Persistence._Identity.Config
 	{
 		public void Configure(EntityTypeBuilder<Address> builder)
 		{
+
+
 			builder.ToTable("Addresses");
 		}
 	}

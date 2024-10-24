@@ -15,7 +15,7 @@ namespace LinkDev.Talabat.Infrastructure.Persistence._Identity.Config
 			builder.Property(U => U.DisplayName)
 				.HasColumnType("varchar")
 				.HasMaxLength(100)
-				.IsRequired();
+				.IsRequired(true);
 
 			builder.HasOne(U => U.Address)
 				.WithOne(A => A.User)

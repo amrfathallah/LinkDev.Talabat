@@ -22,6 +22,7 @@ namespace LinkDev.Talabat.Infrastructure.Persistence._Identity
 		{
 			base.OnModelCreating(builder);
 
+
 			builder.ApplyConfiguration(new ApplicationUserConfigurations());
 			builder.ApplyConfiguration(new AddressConfigurations());
 
