@@ -15,6 +15,7 @@ namespace LinkDev.Talabat.Core.Domain.Entities.Identity
         public required string City { get; set; }
         public required string Country { get; set; }
 
+
         public required string UserId { get; set; }
 
         public virtual required ApplicationUser User { get; set; }
