@@ -18,6 +18,7 @@ namespace LinkDev.Talabat.Infrastructure.Persistence._Common
 				await _dbContext.Database.MigrateAsync(); // Update-Database
 		}
 
+
 		public abstract Task SeedAsync();
 	}
 }

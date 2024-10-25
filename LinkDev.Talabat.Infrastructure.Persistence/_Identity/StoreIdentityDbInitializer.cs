@@ -8,7 +8,6 @@ namespace LinkDev.Talabat.Infrastructure.Persistence._Identity
 	internal sealed class StoreIdentityDbInitializer(StoreIdentityDbContext _dbContext, UserManager<ApplicationUser> _userManager) : DbInitializer(_dbContext), IStoreIdentityDbInitializer
 	{
 		
-
 		public override async Task SeedAsync()
 		{
 			var user = new ApplicationUser()
