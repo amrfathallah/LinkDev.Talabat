@@ -11,8 +11,7 @@ namespace LinkDev.Talabat.APIs.Controllers.Controllers.Products
 {
 	public class ProductsController(IServiceManager serviceManager) : ApiControllerBase
 	{
-
-		[Authorize]
+		//[Authorize]
 		[HttpGet] // GET: /api/Products
 		public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecParams specParams)
 		{
