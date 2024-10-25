@@ -96,6 +96,7 @@ namespace LinkDev.Talabat.Core.Application.Services.Auth
 
 			var tokenObj = new JwtSecurityToken(
 
+
 				audience: _jwtSettings.Audience,
 				issuer:_jwtSettings.Issuer,
 				expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
@@ -105,6 +106,7 @@ namespace LinkDev.Talabat.Core.Application.Services.Auth
 				);
 
 			return new JwtSecurityTokenHandler().WriteToken(tokenObj);
+
 		}
 	}
 }
