@@ -2,6 +2,7 @@
 using LinkDev.Talabat.APIs.Controllers.Errors;
 using LinkDev.Talabat.Core.Application.Exceptions;
 using System.Net;
+using static LinkDev.Talabat.APIs.Controllers.Errors.ApiValidationErrorResponse;
 
 namespace LinkDev.Talabat.APIs.Middlewares
 {
@@ -75,6 +76,16 @@ namespace LinkDev.Talabat.APIs.Middlewares
 					httpContext.Response.ContentType = "application/json";
 
 					response = new ApiResponse(404, ex.Message);
+
+					await httpContext.Response.WriteAsync(response.ToString());
+
+					break;
+
+				case ValidationException validationException:
+					httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+					httpContext.Response.ContentType = "application/json";
+
+					response = new ApiValidationErrorResponse(ex.Message) { Errors = (IEnumerable<ValidationError>)validationException.Errors };
 
 					await httpContext.Response.WriteAsync(response.ToString());
 

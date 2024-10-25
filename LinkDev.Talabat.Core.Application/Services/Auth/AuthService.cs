@@ -22,6 +22,7 @@ namespace LinkDev.Talabat.Core.Application.Services.Auth
 		SignInManager<ApplicationUser> signInManager) : IAuthService
 	{
 
+
 		private readonly JwtSettings _jwtSettings = jwtSettings.Value;
         public async Task<UserDto> LoginAsync(LoginDto model)
 		{
@@ -30,6 +31,12 @@ namespace LinkDev.Talabat.Core.Application.Services.Auth
 			if (user is null) throw new UnAuthorizedException("Invalid Login");
 
 			var result = await signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure : true);
+
+			if (result.IsNotAllowed) throw new UnAuthorizedException("Account not confirmed yet.");
+
+			if (result.IsLockedOut) throw new UnAuthorizedException("Account is Locked.");
+
+			//if (result.RequiresTwoFactor) throw new UnAuthorizedException("Requires Two-Factor Authentication");
 
 			if (!result.Succeeded) throw new UnAuthorizedException("Invalid Login");
 
