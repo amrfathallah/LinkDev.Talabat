@@ -13,6 +13,7 @@ namespace LinkDev.Talabat.APIs.Controllers.Controllers.Account
 	public class AccountController(IServiceManager serviceManager) : ApiControllerBase
 	{
 
+
 		[HttpPost("login")] // POST: /api/account/login
 		public async Task<ActionResult<UserDto>> Login(LoginDto model)
 		{
