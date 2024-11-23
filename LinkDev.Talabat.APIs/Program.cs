@@ -46,28 +46,25 @@ namespace LinkDev.Talabat.APIs
 		
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-			webApplicationBuilder.Services.AddEndpointsApiExplorer();
-			webApplicationBuilder.Services.AddSwaggerGen();
+			webApplicationBuilder.Services.AddEndpointsApiExplorer().AddSwaggerGen();
 
 			//webApplicationBuilder.Services.AddScoped(typeof(IHttpContextAccessor), typeof(HttpContextAccessor));
-			webApplicationBuilder.Services.AddHttpContextAccessor();
-			webApplicationBuilder.Services.AddScoped(typeof(ILoggedInUserService), typeof(LoggedInUserService));
+			webApplicationBuilder.Services.AddHttpContextAccessor().AddScoped(typeof(ILoggedInUserService), typeof(LoggedInUserService));
 
 
-
-			webApplicationBuilder.Services.AddPersistenceServices(webApplicationBuilder.Configuration);
 
 			webApplicationBuilder.Services.AddApplicationServices();
-
+			webApplicationBuilder.Services.AddPersistenceServices(webApplicationBuilder.Configuration);
 			webApplicationBuilder.Services.AddInfrastructureServices(webApplicationBuilder.Configuration);
 
+			webApplicationBuilder.Services.AddIdentityServices(webApplicationBuilder.Configuration);
 			#endregion
 
 			var app = webApplicationBuilder.Build();
 
 			#region Update Databases Initialization
 
-			await app.InitializeStoreContextAsync();
+			await app.InitializeDbAsync();
 
 			#endregion
 
@@ -90,10 +87,11 @@ namespace LinkDev.Talabat.APIs
 
 			app.UseStatusCodePagesWithReExecute("/Errors/{0}");
 
+			app.UseStaticFiles();
+
 			app.UseAuthentication();
 			app.UseAuthorization();
 
-			app.UseStaticFiles();
 
 			app.MapControllers(); 
 

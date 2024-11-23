@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace LinkDev.Talabat.Core.Application.Exceptions
 {
-	public class BadRequestException : ApplicationException
+	public class UnAuthorizedException : ApplicationException
 	{
-		public BadRequestException(string? message = null)
-			: base(message)
+		public UnAuthorizedException(string message)
+			:base(message)
 		{
 
 		}
