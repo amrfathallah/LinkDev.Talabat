@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LinkDev.Talabat.Core.Application.Abstraction;
 using LinkDev.Talabat.Core.Application.Abstraction.Basket;
+using LinkDev.Talabat.Core.Application.Abstraction.Orders;
 using LinkDev.Talabat.Core.Application.Abstraction.Products;
 using LinkDev.Talabat.Core.Application.Mapping;
 using LinkDev.Talabat.Core.Application.Services;
@@ -31,13 +32,20 @@ namespace LinkDev.Talabat.Core.Application
 
 			services.AddScoped(typeof(Func<IBasketService>), (serviceProvider) =>
 			{
-				//var mapper = serviceProvider.GetRequiredService<IMapper>();
-				//var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-				//var basketRepository = serviceProvider.GetRequiredService<IBasketRepository>();
-
-				//return () => new BasketService(basketRepository, mapper, configuration);
+				///var mapper = serviceProvider.GetRequiredService<IMapper>();
+				///var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+				///var basketRepository = serviceProvider.GetRequiredService<IBasketRepository>();
+				///
+				///return () => new BasketService(basketRepository, mapper, configuration);
 
 				return () => serviceProvider.GetRequiredService<IBasketService>();
+			});
+
+			// Register the Factory for Func<IOrderService>
+			services.AddScoped(typeof(Func<IOrderService>), (serviceProvider) =>
+			{
+				
+				return () => serviceProvider.GetRequiredService<IOrderService>();
 			});
 
 			return services;

@@ -2,6 +2,7 @@
 using LinkDev.Talabat.Core.Application.Abstraction;
 using LinkDev.Talabat.Core.Application.Abstraction.Auth;
 using LinkDev.Talabat.Core.Application.Abstraction.Basket;
+using LinkDev.Talabat.Core.Application.Abstraction.Orders;
 using LinkDev.Talabat.Core.Application.Abstraction.Products;
 using LinkDev.Talabat.Core.Application.Services.Auth;
 using LinkDev.Talabat.Core.Application.Services.Basket;
@@ -18,17 +19,19 @@ namespace LinkDev.Talabat.Core.Application.Services
 {
 	internal class ServiceManager : IServiceManager
 	{
+		private readonly Lazy<IOrderService> _orderService;
 		private readonly Lazy<IProductService> _productService;
 		private readonly Lazy<IBasketService> _basketService;
 		private readonly Lazy<IAuthService> _authService;
 		private readonly IConfiguration _configuration;
 
-		public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, Func<IBasketService> basketServiceFactory, Func<IAuthService> authServiceFactory)
+		public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, Func<IOrderService> orderServiceFactor, Func<IBasketService> basketServiceFactory, Func<IAuthService> authServiceFactory)
 		{
 			
 			_configuration = configuration;
 
 			_productService = new Lazy<IProductService>(() => new ProductService(unitOfWork, mapper));
+			_orderService = new Lazy<IOrderService>(orderServiceFactor, LazyThreadSafetyMode.ExecutionAndPublication);
 			_basketService = new Lazy<IBasketService>(basketServiceFactory, LazyThreadSafetyMode.ExecutionAndPublication);
 			_authService = new Lazy<IAuthService>(authServiceFactory, LazyThreadSafetyMode.ExecutionAndPublication);
 		}
@@ -38,5 +41,7 @@ namespace LinkDev.Talabat.Core.Application.Services
 		public IBasketService BasketService => _basketService.Value;
 
 		public IAuthService AuthService => _authService.Value;
+
+		public IOrderService OrderService => _orderService.Value;
 	}
 }
