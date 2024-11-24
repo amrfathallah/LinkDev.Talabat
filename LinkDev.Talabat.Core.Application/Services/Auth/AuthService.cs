@@ -40,6 +40,11 @@ namespace LinkDev.Talabat.Core.Application.Services.Auth
 			};
 		}
 
+		public async Task<bool> EmailExists(string email)
+		{
+			return await userManager.FindByEmailAsync(email) is not null;
+		}
+
 		public async Task<AddressDto?> GetUserAddress(ClaimsPrincipal claimsPrincipal)
 		{
 
@@ -99,6 +104,9 @@ namespace LinkDev.Talabat.Core.Application.Services.Auth
 
 		public async Task<UserDto> RegisterAsync(RegisterDto model)
 		{
+			//if (EmailExists(model.Email).Result)
+			//	throw new BadRequestException("This email is already in user");
+
 			var user = new ApplicationUser()
 			{
 				DisplayName = model.DisplayName,
@@ -123,8 +131,6 @@ namespace LinkDev.Talabat.Core.Application.Services.Auth
 			return response;
 
 		}
-
-		
 
 		private async Task<string> GenerateTokenAsync(ApplicationUser user)
 		{
@@ -159,5 +165,7 @@ namespace LinkDev.Talabat.Core.Application.Services.Auth
 			return new JwtSecurityTokenHandler().WriteToken(tokenObj);
 
 		}
+
+	
 	}
 }
