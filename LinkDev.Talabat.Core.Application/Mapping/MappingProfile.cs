@@ -38,7 +38,7 @@ namespace LinkDev.Talabat.Core.Application.Mapping
                 .ForMember(dest => dest.PictureUrl, options => options.MapFrom(src => src.Product.PictureUrl))
                 .ForMember(dest => dest.PictureUrl, options => options.MapFrom<OrderItemPictureUrlResolver>());
 
-            CreateMap<Address, AddressDto>();
+            CreateMap<Address, AddressDto>().ReverseMap();
 
             CreateMap<DeliveryMethod, DeliveryMethodDto>();
 

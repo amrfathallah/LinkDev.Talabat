@@ -66,7 +66,11 @@ namespace LinkDev.Talabat.Core.Application.Services.Orders
 			
 			var address = mapper.Map<Address>(order.ShippingAddress);
 			
-			// 5. Create Order
+			// 5. Get Delivery Method
+
+			var deliverymethod = await unitOfWork.GetRepository<DeliveryMethod, int>().GetAsync(order.DeliveryMethodId);
+
+			// 6. Create Order
 
 			var orderToCreate = new Order()
 			{
@@ -74,12 +78,12 @@ namespace LinkDev.Talabat.Core.Application.Services.Orders
 				ShippingAddress = address,
 				Items = orderItems,
 				Subtotal = subTotal,
-				DeliveryMethodId = order.DeliveryMethodId,
+				DeliveryMethod = deliverymethod,
 			};
 
 			await unitOfWork.GetRepository<Order, int>().AddAsync(orderToCreate);
 
-			//6. Save To Database
+			//7. Save To Database
 
 			var created = await unitOfWork.CompleteAsync() > 0;
 
